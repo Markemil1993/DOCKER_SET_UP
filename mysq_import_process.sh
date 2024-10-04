@@ -3,7 +3,7 @@
 # Variables
 SQL_FILE="viptutor_live_2024-09-13_00-00-01.sql" 
 DOCKER_CONTAINER="mysql-8-0"
-DB_NAME="v2_viptutors_db"
+DB_NAME="viptutors_db"
 MYSQL_USER="root"
 MYSQL_PASS="vG7n4AP9NSCmXNLg"
 
