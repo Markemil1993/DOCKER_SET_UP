@@ -1,0 +1,71 @@
+version: '2.3'
+
+services:
+  mysql:
+    restart: always
+    image: mysql:8.0
+    container_name: mysql-8-0
+    volumes:
+      - /var/log/mysql-docker:/var/lib/mysql
+      - /var/log/mysql-docker:/var/log/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/create_user.sql:/docker-entrypoint-initdb.d/create_user.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - mysqlnetwork
+    environment:
+      - MYSQL_ROOT_PASSWORD=vG7n4AP9NSCmXNLg # You can change root password
+      - MYSQL_DATABASE=viptutors_db
+
+  nginx:
+    container_name: 'nginx'
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /var/www/viptutors:/usr/share/nginx/html/viptutors
+      - /var/www/viptutors-laravel:/usr/share/nginx/html/viptutors-laravel
+    ports:
+      - "80:80" # laravel port
+      - "81:81" # CI-3 Legacy port
+    depends_on:
+      - php7-2
+      - php8-2
+    links:
+      - php7-2:php7-2
+      - php8-2:php8-2
+    networks:
+      - mysqlnetwork  
+
+  php7-2:
+    container_name: 'php7-2'
+    build: ./php/php7-2
+    restart: always
+    expose:
+      - "9000"
+    volumes:
+      - /var/www/viptutors:/usr/share/nginx/html/viptutors
+      - ./php/phpini:/usr/local/etc/php
+    networks:
+      - mysqlnetwork  
+
+  php8-2:
+    container_name: 'php8-2'
+    build: ./php/php8-2
+    restart: always
+    expose:
+      - "9000"
+    volumes:
+      - /var/www/viptutors-laravel:/usr/share/nginx/html/viptutors-laravel
+    networks:
+      - mysqlnetwork  
+
+volumes:
+  mysql:
+    driver: local
+
+networks:
+  mysqlnetwork:
+    driver: bridge
