@@ -86,3 +86,10 @@ docker exec -it php8-2 php artisan make:controller SampleController
 ```bash
 docker exec -it php8-2 bash
 ```
+
+host:
+```bash
+ip a
+```
+http://<IP Adress>  -> laravel
+http://<IP Adress>:81  -> CI - 3 Legacy
