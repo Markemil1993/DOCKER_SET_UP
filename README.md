@@ -89,7 +89,10 @@ docker exec -it php8-2 bash
 
 host:
 ```bash
-ip a
+hostname -I | awk '{print $1}'
+
+# Output
+192.168.254.120
 ```
-http://<IP Adress>  -> laravel
-http://<IP Adress>:81  -> CI - 3 Legacy
+http://192.168.254.120  -> laravel
+http://192.168.254.120:81  -> CI - 3 Legacy
